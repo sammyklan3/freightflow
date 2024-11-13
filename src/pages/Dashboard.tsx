@@ -1,18 +1,22 @@
-import React from 'react'
-import { MapPin } from 'lucide-react';
-import Navbar from '../components/Navbar'
-import { jobs } from '../data/jobs'
-import JobCard from '../components/JobCard'
+import React from "react";
+import { MapPin } from "lucide-react";
+import Navbar from "../components/Navbar";
+import { jobs } from "../data/jobs";
+import JobCard from "../components/JobCard";
 
 const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      
+
       <main className="container mx-auto px-4 py-8">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Find Your Next Driving Opportunity</h1>
-          <p className="text-xl text-gray-600">Connect with goods owners and secure reliable transportation jobs</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Find Your Next Driving Opportunity
+          </h1>
+          <p className="text-xl text-gray-600">
+            Connect with goods owners and secure reliable transportation jobs
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -22,7 +26,9 @@ const Dashboard = () => {
               <h2 className="text-xl font-semibold mb-4">Search Filters</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Location
+                  </label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                     <input
@@ -32,9 +38,11 @@ const Dashboard = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Job Type
+                  </label>
                   <select className="w-full rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500">
                     <option>All Types</option>
                     <option>Local Delivery</option>
@@ -44,7 +52,9 @@ const Dashboard = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Experience Level</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Experience Level
+                  </label>
                   <select className="w-full rounded-lg border-gray-200 focus:border-blue-500 focus:ring-blue-500">
                     <option>Any Experience</option>
                     <option>Entry Level</option>
@@ -71,7 +81,7 @@ const Dashboard = () => {
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
 export default Dashboard;

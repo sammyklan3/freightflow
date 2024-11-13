@@ -1,5 +1,5 @@
-import { MapPin, Clock, DollarSign, Package } from 'lucide-react';
-import Badge from './Badge';
+import { MapPin, Clock, DollarSign, Package } from "lucide-react";
+import Badge from "./Badge";
 
 interface Job {
   id: number;
@@ -22,7 +22,9 @@ const JobCard = ({ job }: JobCardProps) => {
     <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6">
       <div className="flex justify-between items-start">
         <div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">{job.title}</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            {job.title}
+          </h3>
           <p className="text-gray-600 font-medium mb-4">{job.company}</p>
         </div>
         <Badge label={job.type} type="warning" />

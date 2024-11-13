@@ -1,4 +1,4 @@
-import { Truck, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Truck, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 
 function Footer() {
   return (
@@ -11,7 +11,8 @@ function Footer() {
               <span className="font-bold text-xl text-white">FreightFlow</span>
             </div>
             <p className="text-gray-400 mb-4">
-              Connecting drivers and goods owners for efficient logistics solutions.
+              Connecting drivers and goods owners for efficient logistics
+              solutions.
             </p>
             <div className="flex gap-4">
               <Facebook className="w-5 h-5 hover:text-white cursor-pointer" />
@@ -20,27 +21,59 @@ function Footer() {
               <Instagram className="w-5 h-5 hover:text-white cursor-pointer" />
             </div>
           </div>
-          
+
           <div>
             <h3 className="font-semibold text-white mb-4">Company</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-white">About Us</a></li>
-              <li><a href="#" className="hover:text-white">Careers</a></li>
-              <li><a href="#" className="hover:text-white">Press</a></li>
-              <li><a href="#" className="hover:text-white">Blog</a></li>
+              <li>
+                <a href="#" className="hover:text-white">
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white">
+                  Careers
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white">
+                  Press
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white">
+                  Blog
+                </a>
+              </li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="font-semibold text-white mb-4">Support</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-white">Help Center</a></li>
-              <li><a href="#" className="hover:text-white">Safety</a></li>
-              <li><a href="#" className="hover:text-white">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
+              <li>
+                <a href="#" className="hover:text-white">
+                  Help Center
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white">
+                  Safety
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white">
+                  Terms of Service
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white">
+                  Privacy Policy
+                </a>
+              </li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="font-semibold text-white mb-4">Contact</h3>
             <ul className="space-y-2">
