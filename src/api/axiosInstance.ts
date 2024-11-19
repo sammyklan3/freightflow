@@ -3,7 +3,7 @@ import { getTokens, setTokens, clearTokens } from "../helpers/tokenManager";
 
 const api = axios.create({
   baseURL:
-    import.meta.env.REACT_APP_API_URL === "production"
+    import.meta.env.VITE_APP_ENV === "production"
       ? import.meta.env.VITE_PRODUCTION_BASE_URL
       : import.meta.env.VITE_DEVELOPMENT_BASE_URL,
   headers: { "Content-Type": "application/json" },
