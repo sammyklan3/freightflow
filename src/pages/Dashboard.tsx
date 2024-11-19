@@ -1,10 +1,11 @@
-import React from "react";
 import { MapPin } from "lucide-react";
 import Navbar from "../components/Navbar";
 import { jobs } from "../data/jobs";
 import JobCard from "../components/JobCard";
 
 const Dashboard = () => {
+  document.title = "Dashboard - FreightFlow";
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />

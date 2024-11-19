@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import api from "../api/axiosInstance";
 import { setTokens, clearTokens, getTokens } from "../helpers/tokenManager";
 import { AuthContextType, TokenResponse } from "../types/auth";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
@@ -10,6 +11,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [userData, setUserData] = useState<any>(null);
   const [accessToken, setAccessToken] = useState<string | null>(
     getTokens().accessToken
   );
@@ -25,6 +27,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const { accessToken, refreshToken } = response.data;
       setTokens(accessToken, refreshToken); // Sync with tokenManager
       setAccessToken(accessToken);
+
+      // Decode the access token to get user data
+      const decodedToken = jwtDecode(accessToken);
+      setUserData(decodedToken); // Save decoded token data in state
+
+      console.log("Login successful:", decodedToken);
     } catch (error) {
       console.error("Login error:", error);
       throw error;
@@ -79,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ accessToken, login, logout, refreshAccessToken }}
+      value={{ accessToken, userData, login, logout, refreshAccessToken }}
     >
       {children}
     </AuthContext.Provider>

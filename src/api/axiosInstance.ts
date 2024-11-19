@@ -2,7 +2,10 @@ import axios from "axios";
 import { getTokens, setTokens, clearTokens } from "../helpers/tokenManager";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL:
+    import.meta.env.REACT_APP_API_URL === "production"
+      ? import.meta.env.VITE_PRODUCTION_BASE_URL
+      : import.meta.env.VITE_DEVELOPMENT_BASE_URL,
   headers: { "Content-Type": "application/json" },
 });
 
@@ -37,7 +40,10 @@ api.interceptors.response.use(
 
       try {
         // Request new access token
-        const { data } = await axios.post("http://localhost:3000/api/auth/refresh", { token: refreshToken });
+        const { data } = await axios.post(
+          "http://localhost:3000/api/auth/refresh",
+          { token: refreshToken }
+        );
         setTokens(data.accessToken, data.refreshToken);
 
         // Retry the original request with the new access token

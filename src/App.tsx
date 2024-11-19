@@ -1,9 +1,16 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
+import { useAuth } from "./hooks/useAuth";
 import Auth from "./pages/Auth";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
+  const { userData } = useAuth();
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -15,7 +22,7 @@ function App() {
     },
     {
       path: "/dashboard",
-      element: <Dashboard />,
+      element: userData ? <Dashboard /> : <Navigate to="/auth" />,
     },
   ]);
   return <RouterProvider router={router} />;

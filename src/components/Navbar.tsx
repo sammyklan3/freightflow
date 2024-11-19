@@ -1,7 +1,10 @@
 import { Truck, Bell, User } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const Navbar = () => {
+  const { userData } = useAuth();
+
   return (
     <nav className="bg-white shadow-sm">
       <div className="container mx-auto px-4">
@@ -37,7 +40,7 @@ const Navbar = () => {
               className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out"
             >
               <User className="h-5 w-5" />
-              <span>Sign In</span>
+              <span>{userData?.username ? userData.username : "Sign In"}</span>
             </NavLink>
           </div>
         </div>
