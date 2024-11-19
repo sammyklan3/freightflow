@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ArrowRight, Mail, Lock, Truck, Package } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { SignInProps } from "../types/auth";
-import { useAuth } from "../context/AuthProvider";
+import { useAuth } from "../hooks/UseAuth";
 import Branding from "./Branding";
 
 const SignIn: React.FC<SignInProps> = ({ setIsLogin }) => {

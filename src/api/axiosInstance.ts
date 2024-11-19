@@ -1,19 +1,18 @@
-// https://freightflow.onrender.com
-
-import axios from 'axios';
-import { useAuth } from '../context/AuthProvider';
+import axios from "axios";
+import { getTokens, setTokens, clearTokens } from "../helpers/tokenManager";
 
 const api = axios.create({
-  baseURL: 'https://api.example.com',
-  headers: { 'Content-Type': 'application/json' },
+  baseURL: "http://localhost:3000",
+  headers: { "Content-Type": "application/json" },
 });
 
+// Request Interceptor
 api.interceptors.request.use(
   async (config) => {
-    const { accessToken } = useAuth();
+    const { accessToken } = getTokens();
 
     if (accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`;
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
     return config;
@@ -21,23 +20,35 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Handle refresh token if access token has expired in response interceptor
+// Response Interceptor
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-
-    const { refreshAccessToken } = useAuth();
-
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      await refreshAccessToken();
-      const { accessToken } = useAuth();
-      if (accessToken) {
-        originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+
+      const { refreshToken } = getTokens();
+      if (!refreshToken) {
+        clearTokens();
+        return Promise.reject(error);
+      }
+
+      try {
+        // Request new access token
+        const { data } = await axios.post("http://localhost:3000/api/auth/refresh", { token: refreshToken });
+        setTokens(data.accessToken, data.refreshToken);
+
+        // Retry the original request with the new access token
+        originalRequest.headers["Authorization"] = `Bearer ${data.accessToken}`;
         return api(originalRequest);
+      } catch (refreshError) {
+        clearTokens();
+        return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
   }
 );

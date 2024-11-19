@@ -1,27 +1,18 @@
-import React, { createContext, useEffect, useState, useContext } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import api from "../api/axiosInstance";
-import { jwtDecode } from "jwt-decode";
+import { setTokens, clearTokens, getTokens } from "../helpers/tokenManager";
 import { AuthContextType, TokenResponse } from "../types/auth";
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
 );
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [accessToken, setAccessToken] = useState<string | null>(
-    localStorage.getItem("accessToken")
+    getTokens().accessToken
   );
-  const refreshToken = localStorage.getItem("refreshToken");
 
   // Login method to obtain access and refresh tokens
   const login = async (email: string, password: string) => {
@@ -31,7 +22,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         password,
       });
 
-      setTokens(response.data);
+      const { accessToken, refreshToken } = response.data;
+      setTokens(accessToken, refreshToken); // Sync with tokenManager
+      setAccessToken(accessToken);
     } catch (error) {
       console.error("Login error:", error);
       throw error;
@@ -40,43 +33,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Logout method to clear tokens
   const logout = () => {
+    clearTokens(); // Clear tokens globally
     setAccessToken(null);
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
   };
 
-  // Set tokens in both state and local storage
-  const setTokens = ({ accessToken, refreshToken }: TokenResponse) => {
-    setAccessToken(accessToken);
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+  // Check if the access token is expired
+  const isTokenExpired = (token: string): boolean => {
+    try {
+      const { exp } = JSON.parse(atob(token.split(".")[1])); // Decode JWT
+      return Date.now() >= exp * 1000;
+    } catch (error) {
+      return true; // Treat invalid token as expired
+    }
   };
 
-  // Refresh the access token
+  // Automatically refresh the token if expired
   const refreshAccessToken = async () => {
+    const { refreshToken } = getTokens();
+    if (!refreshToken) {
+      logout();
+      return;
+    }
+
     try {
       const response = await api.post<TokenResponse>("/auth/refresh", {
         token: refreshToken,
       });
-      setTokens(response.data);
+
+      const { accessToken, refreshToken: newRefreshToken } = response.data;
+      setTokens(accessToken, newRefreshToken); // Sync with tokenManager
+      setAccessToken(accessToken);
     } catch (error) {
       console.error("Token refresh error:", error);
       logout();
     }
   };
 
-  // Decode and check if access token is expired
-  const isTokenExpired = (token: string): boolean => {
-    const { exp } = jwtDecode<{ exp: number }>(token);
-    return Date.now() >= exp * 1000;
-  };
-
-  // Automatically refresh access token if expired
+  // Automatically refresh the access token on mount if expired
   useEffect(() => {
+    const { accessToken } = getTokens();
     if (accessToken && isTokenExpired(accessToken)) {
       refreshAccessToken();
     }
-  }, [accessToken]);
+  }, []);
 
   return (
     <AuthContext.Provider
