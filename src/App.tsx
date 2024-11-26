@@ -1,12 +1,10 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-} from "react-router-dom";
+import { lazy, Suspense } from "react";
 import { useAuth } from "./hooks/useAuth";
-import Auth from "./pages/Auth";
-import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
+import { createBrowserRouter, Navigate, RouterProvider} from "react-router-dom";
+
+const Auth = lazy(() => import("./pages/Auth"));
+const Home = lazy(() => import("./pages/Home"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 function App() {
   const { userData } = useAuth();
@@ -18,13 +16,28 @@ function App() {
     },
     {
       path: "/auth",
-      element: <Auth />,
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Auth />
+        </Suspense>
+      ),
     },
     {
       path: "/dashboard",
-      element: userData ? <Dashboard /> : <Navigate to="/auth" />,
+      element: userData ? (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Dashboard />
+        </Suspense>
+      ) : (
+        <Navigate to="/auth" />
+      ),
     },
+    {
+      path: "*",
+      element: <Navigate to="/" />,
+    }    
   ]);
+
   return <RouterProvider router={router} />;
 }
 

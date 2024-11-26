@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import api from "../api/axiosInstance";
 import { setTokens, clearTokens, getTokens } from "../helpers/tokenManager";
 import { AuthContextType, TokenResponse } from "../types/auth";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Ensure this is the correct import path
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
@@ -16,7 +16,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     getTokens().accessToken
   );
 
-  // Login method to obtain access and refresh tokens
+  // Login method
   const login = async (email: string, password: string) => {
     try {
       const response = await api.post<TokenResponse>("/auth/login", {
@@ -28,10 +28,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setTokens(accessToken, refreshToken); // Sync with tokenManager
       setAccessToken(accessToken);
 
-      // Decode the access token to get user data
       const decodedToken = jwtDecode(accessToken);
       setUserData(decodedToken); // Save decoded token data in state
-
       console.log("Login successful:", decodedToken);
     } catch (error) {
       console.error("Login error:", error);
@@ -39,13 +37,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Logout method to clear tokens
+  // Logout method
   const logout = () => {
     clearTokens(); // Clear tokens globally
     setAccessToken(null);
+    setUserData(null); // Clear userData on logout
   };
 
-  // Check if the access token is expired
+  // Check if the token is expired
   const isTokenExpired = (token: string): boolean => {
     try {
       const { exp } = JSON.parse(atob(token.split(".")[1])); // Decode JWT
@@ -55,7 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Automatically refresh the token if expired
+  // Refresh the access token
   const refreshAccessToken = async () => {
     const { refreshToken } = getTokens();
     if (!refreshToken) {
@@ -71,19 +70,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const { accessToken, refreshToken: newRefreshToken } = response.data;
       setTokens(accessToken, newRefreshToken); // Sync with tokenManager
       setAccessToken(accessToken);
+
+      const decodedToken = jwtDecode(accessToken);
+      setUserData(decodedToken); // Update userData with new token
     } catch (error) {
       console.error("Token refresh error:", error);
       logout();
     }
   };
 
-  // Automatically refresh the access token on mount if expired
+  // Restore userData on mount or accessToken change
   useEffect(() => {
     const { accessToken } = getTokens();
-    if (accessToken && isTokenExpired(accessToken)) {
-      refreshAccessToken();
+    if (accessToken) {
+      if (isTokenExpired(accessToken)) {
+        refreshAccessToken();
+      } else {
+        const decodedToken = jwtDecode(accessToken);
+        setUserData(decodedToken); // Restore userData from token
+      }
     }
-  }, []);
+  }, [accessToken]);
 
   return (
     <AuthContext.Provider
