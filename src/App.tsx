@@ -1,14 +1,16 @@
-import { lazy, Suspense } from "react";
-import { useAuth } from "./hooks/useAuth";
-import { createBrowserRouter, Navigate, RouterProvider} from "react-router-dom";
+import { lazy } from "react";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const Auth = lazy(() => import("./pages/Auth"));
 const Home = lazy(() => import("./pages/Home"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 function App() {
-  const { userData } = useAuth();
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -16,26 +18,20 @@ function App() {
     },
     {
       path: "/auth",
-      element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Auth />
-        </Suspense>
-      ),
+      element: <Auth />,
     },
     {
       path: "/dashboard",
-      element: userData ? (
-        <Suspense fallback={<div>Loading...</div>}>
+      element: (
+        <ProtectedRoute>
           <Dashboard />
-        </Suspense>
-      ) : (
-        <Navigate to="/auth" />
+        </ProtectedRoute>
       ),
     },
     {
       path: "*",
       element: <Navigate to="/" />,
-    }    
+    },
   ]);
 
   return <RouterProvider router={router} />;

@@ -81,16 +81,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Restore userData on mount or accessToken change
   useEffect(() => {
-    const { accessToken } = getTokens();
-    if (accessToken) {
-      if (isTokenExpired(accessToken)) {
-        refreshAccessToken();
-      } else {
-        const decodedToken = jwtDecode(accessToken);
-        setUserData(decodedToken); // Restore userData from token
+    const restoreSession = async () => {
+      const { accessToken } = getTokens();
+      if (accessToken) {
+        if (isTokenExpired(accessToken)) {
+          await refreshAccessToken();
+        } else {
+          const decodedToken = jwtDecode(accessToken);
+          setUserData(decodedToken);
+        }
       }
-    }
-  }, [accessToken]);
+    };
+
+    restoreSession();
+  }, []);
 
   return (
     <AuthContext.Provider

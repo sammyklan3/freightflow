@@ -31,7 +31,10 @@ const safeLocalStorage = {
 };
 
 // Get current tokens
-export const getTokens = (): { accessToken: string | null; refreshToken: string | null } => {
+export const getTokens = (): {
+  accessToken: string | null;
+  refreshToken: string | null;
+} => {
   if (!accessToken) {
     accessToken = safeLocalStorage.getItem("accessToken");
   }
@@ -42,7 +45,10 @@ export const getTokens = (): { accessToken: string | null; refreshToken: string 
 };
 
 // Set tokens
-export const setTokens = (newAccessToken: string, newRefreshToken: string): void => {
+export const setTokens = (
+  newAccessToken: string,
+  newRefreshToken: string
+): void => {
   accessToken = newAccessToken;
   refreshToken = newRefreshToken;
 
