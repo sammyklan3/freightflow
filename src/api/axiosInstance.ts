@@ -9,6 +9,8 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+const BASE_URL = import.meta.env.VITE_APP_ENV === "production" ? import.meta.env.VITE_PRODUCTION_BASE_URL : import.meta.env.VITE_DEVELOPMENT_BASE_URL;
+
 // Request Interceptor
 api.interceptors.request.use(
   async (config) => {
@@ -41,7 +43,7 @@ api.interceptors.response.use(
       try {
         // Request new access token
         const { data } = await axios.post(
-          "http://localhost:3000/api/auth/refresh",
+          `${BASE_URL}/api/auth/refresh`,
           { token: refreshToken }
         );
         setTokens(data.accessToken, data.refreshToken);

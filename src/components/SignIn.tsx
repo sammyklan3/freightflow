@@ -32,7 +32,7 @@ const SignIn: React.FC<SignInProps> = ({ setIsLogin }) => {
       await login(formData.email, formData.password);
       navigate("/dashboard");
     } catch (error) {
-      setError(error.message);
+      setError(error.response.data.message);
       console.error("An error occurred:", error);
     } finally {
       setIsSubmitting(false);
