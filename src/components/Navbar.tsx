@@ -9,18 +9,18 @@ const Navbar = () => {
     <nav className="bg-white shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-2">
+          <NavLink to="/dashboard" className="flex items-center space-x-2">
             <Truck className="h-8 w-8 text-blue-600" />
             <span className="text-xl font-bold text-gray-900">
-              DriveConnect
+              FreightFlow
             </span>
-          </div>
+          </NavLink>
 
           <div className="hidden md:flex items-center space-x-8">
             <a href="#" className="text-gray-600 hover:text-gray-900">
               Find Jobs
             </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">
+            <a href="/post-job" className="text-gray-600 hover:text-gray-900">
               Post a Job
             </a>
             <a href="#" className="text-gray-600 hover:text-gray-900">
